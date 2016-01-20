@@ -10,6 +10,7 @@
 using std::string;
 using std::vector;
 
+#include "lib.hpp"
 #include "command.hpp"
 #include "parser.hpp"
 

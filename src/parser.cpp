@@ -19,9 +19,9 @@ namespace jomna {
                     i = expr(program, i);
                 }catch(int){ // TODO
                     // move to next stmt
-                    while(i < (signed)program.size() && program[i] != ' ') i++;
+                    while(i < size(program) && program[i] != ' ') i++;
                 }
-            while(i < (signed)program.size() && program[i++] == ' ');
+            while(i < size(program) && program[i++] == ' ');
             return i;
         }
 
@@ -32,17 +32,20 @@ namespace jomna {
 
         PARSE_FN_IMP(num) {
             char c = program[i];
-            if('a' <= c && c <= 'z' || '0' <= c && c <= '9') {
+            if(cover('a', c, 'z') || cover('0', c, '9')) {
                 int n = 0;
                 do {
                     c = program[i];
-                    if('0' <= c && c <= '9') n = n * 64 + c - '0';
-                    else if('a' <= c && c <= 'z') n = n * 64 + c - 'a' + 10;
-                    else if('A' <= c && c <= 'Z') n = n * 64 + c - 'A' + 36;
-                    else if(c == '~') n = n * 64 + 62;
-                    else if(c == '_') n = n * 64 + 63;
-                    else break;
-                } while(++i < (signed)program.size());
+
+                    #define NUM_UPDATE(from, to, start) \
+                        if(cover(from, c, to)) n = n * 64 + c - from + start;
+
+                    NUM_UPDATE('0', '9', 0) else
+                    NUM_UPDATE('a', 'z', 10) else
+                    NUM_UPDATE('A', 'Z', 36) else
+                    NUM_UPDATE('~', '~', 62) else
+                    NUM_UPDATE('_', '_', 63) else break;
+                } while(++i < size(program));
 
                 std::cout << n << std::endl;
                 return i;

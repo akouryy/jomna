@@ -1,2 +1,29 @@
-# jomna
-shoooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooort
+# Jomna
+
+[English version](http://bit.ly/23eo8j1 "not yet")
+
+Jomna【ヨムナ】はちっちゃなプログラミング言語です。
+
+## Overview
+
+Jomnaでは、数値は64進数で表されます。
+
+|0|1|…|9|a|b|…|z|A|B|…|Z|~|_|
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+|0|1|…|9|10|11|…|35|36|37|…|61|62|63|
+
+```
+70      # => 448(10)
+0a      # => 74(10)
+0A      # => 100(10)
+z.w     # => 35.5(10)
+```
+
+数値リテラルの最初の文字は数字または英小文字である必要があります。
+
+```
+abc     # OK
+0abc    # OK
+ABC     # NG
+0ABC    # OK
+```

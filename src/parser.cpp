@@ -3,19 +3,20 @@
 namespace jomna {
     namespace parser {
         class Parser {
-            void rep(const std::function<bool(char)>& f) {
-                while(i < size(program) && f(program[i])) ++i;
+            void rep(const std::function<bool()>& f) {
+                while(i < size(P) && f()) i++;
             }
-            void repsep(const std::function<void()>& f, char c) {
-                do f(); while(i < size(program) && program[i++] == c);
+            void repsep(const std::function<bool()>& f, char c) {
+                while(i < size(P) && f()) if(P[i] == c) i++; else return;
+                i--;
             }
 
             int i;
-            const string program;
+            const string P;
             void expr();
             void num();
         public:
-            Parser(const string& program) : i(0), program(program) {}
+            Parser(const string& program) : i(0), P(program) {}
             void run();
         };
 
@@ -29,10 +30,11 @@ namespace jomna {
                 try{
                     expr();
                 }catch(int){ // TODO
-                    std::cerr << "parse error: " << program[i] << std::endl;
+                    std::cerr << "parse error: " << P[i] << std::endl;
                     // move to next stmt
-                    while(i < size(program) && program[i] != ' ') i++;
+                    while(i < size(P) && P[i] != ' ') i++;
                 }
+                return 1;
             }, ' ');
         }
 
@@ -41,17 +43,19 @@ namespace jomna {
         }
 
         void Parser::num() {
-            if(cover('a', program[i], 'z') || cover('0', program[i], '9')) {
+            if(cover('a', P[i], 'z') || cover('0', P[i], '9')) {
                 int n = 0;
-                rep([&](char c){
-                    #define NUM_UPDATE(from, to, start) \
-                        if(cover(from, c, to)) { n = n * 64 + c - from + start; return true; }
+                rep([&](){
+                    int d = -1;
 
-                    NUM_UPDATE('0', '9', 0) else
-                    NUM_UPDATE('a', 'z', 10) else
-                    NUM_UPDATE('A', 'Z', 36) else
-                    NUM_UPDATE('~', '~', 62) else
-                    NUM_UPDATE('_', '_', 63) else return false;
+                    if(cover('0', P[i], '9')) d = P[i] - '0';
+                    if(cover('a', P[i], 'z')) d = P[i] - 'a' + 10;
+                    if(cover('A', P[i], 'Z')) d = P[i] - 'A' + 36;
+                    if(cover('~', P[i], '~')) d = 62;
+                    if(cover('_', P[i], '_')) d = 63;
+
+                    if(~d) n = n * 64 + d;
+                    return ~d;
                 });
 
                 std::cout << n << std::endl;

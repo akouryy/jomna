@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <meta charset="utf-8">
+        <title>Jomna overview</title>
+        <style>
+            body {
+                font-family: "ヒラギノ丸ゴ ProN W4", "Hiragino Maru Gothic ProN", '游ゴシック', YuGothic, 'メイリオ', Meiryo, sans-serif;
+            }
+            table {
+                border-collapse: collapse;
+                margin: 1em 0;
+            }
+            table th, table td {
+                border: 2px solid #ccc;
+                padding: 0.5em 0.5em;
+                text-align: center;
+            }
+            table.code th {
+                font-size: 1.1em;
+                font-weight: bold;
+            }
+            code, .code {
+                font-family: "Source Code Pro", Menlo, "Courier New", monospace;
+            }
+            code {
+                border: 2px solid #ccc;
+                border-radius: 0.5em;
+                display: block;
+                padding: 1em;
+                margin: 1em 0;
+                width: 50em;
+                white-space: pre;
+            }
+            code .num {
+                color: #0086B3;
+            }
+            code .comment {
+                color: #969896;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Jomna overview</h1>
+        <section>
+            <h1>syntax</h1>
+            <section>
+                <h1>numbers</h1>
+
+                Jomnaでは、数値は64進数で表されます。
+
+                <table class="code">
+                    <thead>
+                        <tr>
+                            <th>0</th><th>1</th><th>…</th><th>9</th>
+                            <th>a</th><th>b</th><th>…</th><th>z</th>
+                            <th>A</th><th>B</th><th>…</th><th>Z</th>
+                            <th>~</th><th>_</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>0</td><td>1</td><td>…</td><td>9</td>
+                            <td>10</td><td>11</td><td>…</td><td>35</td>
+                            <td>36</td><td>37</td><td>…</td><td>61</td>
+                            <td>62</td><td>63</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+<code><span class="num">70</span>      <span class="comment"># => 448</span>
+<span class="num">1a</span>      <span class="comment"># => 74</span>
+<span class="num">1A</span>      <span class="comment"># => 100</span>
+<span class="num">7_5~3</span>   <span class="comment"># => 133980035</span>
+<span class="num">z.w</span>     <span class="comment"># => 35.5</span></code>
+
+                数値リテラルの最初の文字は数字または英小文字である必要があります。
+
+<code><span class="num">abc</span>     <span class="comment"># OK</span>
+<span class="num">0abc</span>    <span class="comment"># OK</span>
+ABC     <span class="comment"># NG</span>
+<span class="num">0ABC</span>    <span class="comment"># OK</span></code>
+
+            </section>
+        </section>
+    </body>
+</html>

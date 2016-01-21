@@ -1,56 +1,61 @@
 #include "jomna.hpp"
 
-#define PARSE_FN_IMP(fn) int fn(const string& program, int i)
-#define PARSE_FN_DEC(fn) int fn(const string&, int);
-
 namespace jomna {
     namespace parser {
-        PARSE_FN_DEC(stmts);
-        PARSE_FN_DEC(expr);
-        PARSE_FN_DEC(num);
+        class Parser {
+            void rep(const std::function<bool(char)>& f) {
+                while(i < size(program) && f(program[i])) ++i;
+            }
+            void repsep(const std::function<void()>& f, char c) {
+                do f(); while(i < size(program) && program[i++] == c);
+            }
+
+            int i;
+            const string program;
+            void expr();
+            void num();
+        public:
+            Parser(const string& program) : i(0), program(program) {}
+            void run();
+        };
+
 
         void run(const string& program) {
-            stmts(program, 0);
+            Parser(program).run();
         }
 
-        PARSE_FN_IMP(stmts) {
-            do
+        void Parser::run() {
+            repsep([&](){
                 try{
-                    i = expr(program, i);
+                    expr();
                 }catch(int){ // TODO
+                    std::cerr << "parse error: " << program[i] << std::endl;
                     // move to next stmt
                     while(i < size(program) && program[i] != ' ') i++;
                 }
-            while(i < size(program) && program[i++] == ' ');
-            return i;
+            }, ' ');
         }
 
-        PARSE_FN_IMP(expr) {
-            i = num(program, i);
-            return i;
+        void Parser::expr() {
+            num();
         }
 
-        PARSE_FN_IMP(num) {
-            char c = program[i];
-            if(cover('a', c, 'z') || cover('0', c, '9')) {
+        void Parser::num() {
+            if(cover('a', program[i], 'z') || cover('0', program[i], '9')) {
                 int n = 0;
-                do {
-                    c = program[i];
-
+                rep([&](char c){
                     #define NUM_UPDATE(from, to, start) \
-                        if(cover(from, c, to)) n = n * 64 + c - from + start;
+                        if(cover(from, c, to)) { n = n * 64 + c - from + start; return true; }
 
                     NUM_UPDATE('0', '9', 0) else
                     NUM_UPDATE('a', 'z', 10) else
                     NUM_UPDATE('A', 'Z', 36) else
                     NUM_UPDATE('~', '~', 62) else
-                    NUM_UPDATE('_', '_', 63) else break;
-                } while(++i < size(program));
+                    NUM_UPDATE('_', '_', 63) else return false;
+                });
 
                 std::cout << n << std::endl;
-                return i;
             } else {
-                std::cerr << "parse error: " << c << std::endl;
                 throw 1; // TODO
             }
         }

@@ -8,7 +8,7 @@ namespace jomna {
                 return {false};
             }
 
-            options opt{true};
+            options opt;
 
             for(auto i = args.begin(); i != args.end(); i++) {
                 if((*i)[0] == '-') {

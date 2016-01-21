@@ -16,24 +16,38 @@
                 padding: 0.5em 0.5em;
                 text-align: center;
             }
-            table.code th {
-                font-size: 1.1em;
-                font-weight: bold;
+            table th {
+                font-weight: 600;
             }
             code, .code {
                 font-family: "Source Code Pro", Menlo, "Courier New", monospace;
             }
             code {
+                white-space: pre;
+            }
+            code.block {
                 border: 2px solid #ccc;
                 border-radius: 0.5em;
                 display: block;
                 padding: 1em;
                 margin: 1em 0;
                 width: 50em;
-                white-space: pre;
+            }
+            code:not(.block) {
+                color: #c33;
             }
             code .num {
                 color: #0086B3;
+            }
+            code .string {
+                color: #183691;
+            }
+            code .string i {
+                color: #0086B3;
+                font-style: inherit;
+            }
+            code .binop {
+                color: #A71D5D;
             }
             code .comment {
                 color: #969896;
@@ -47,7 +61,7 @@
             <section>
                 <h1>numbers</h1>
 
-                Jomnaでは、数値は64進数で表されます。
+                <p>Jomnaでは、数値は64進数で表されます。</p>
 
                 <table class="code">
                     <thead>
@@ -68,7 +82,7 @@
                     </tbody>
                 </table>
 
-<code><span class="num">70</span>      <span class="comment"># => 448</span>
+<code class="block"><span class="num">70</span>      <span class="comment"># => 448</span>
 <span class="num">1a</span>      <span class="comment"># => 74</span>
 <span class="num">1A</span>      <span class="comment"># => 100</span>
 <span class="num">7_5~3</span>   <span class="comment"># => 133980035</span>
@@ -76,10 +90,81 @@
 
                 数値リテラルの最初の文字は数字または英小文字である必要があります。
 
-<code><span class="num">abc</span>     <span class="comment"># OK</span>
+<code class="block"><span class="num">abc</span>     <span class="comment"># OK</span>
 <span class="num">0abc</span>    <span class="comment"># OK</span>
-ABC     <span class="comment"># NG</span>
+ABC     <span class="comment"># wrong</span>
 <span class="num">0ABC</span>    <span class="comment"># OK</span></code>
+
+            </section>
+
+            <section>
+                <h1>strings</h1>
+
+                <p>Jomnaには2種類の文字列リテラルがあります。ダブルクォート文字列とシングルクォートシンボルです。</p>
+
+                <p>ダブルクォート文字列は、一般的な文字列の形式です。ダブルクォート文字(<code>"</code>)で始まり、<code>"</code>やバックスラッシュ(<code>\</code>)以外の任意の文字(またはエスケープシーケンス、後述)が0個以上並び、<code>"</code>で終わります。<br/>また、<code>\</code>から始まるエスケープシーケンスによって、特殊な文字を表現できます。</p>
+
+                <table class="code">
+                    <thead>
+                        <tr>
+                            <th>\a</th>
+                            <th>\b</th>
+                            <th>\e</th>
+                            <th>\f</th>
+                            <th>\n</th>
+                            <th>\N</th>
+                            <th>\r</th>
+                            <th>\s</th>
+                            <th>\t</th>
+                            <th>\c<i>?</i></th>
+                            <th>\m<i>?</i></th>
+                            <th>\M<i>?</i></th>
+                            <th>\<i>???</i></th>
+                            <th>\x<i>??</i></th>
+                            <th>\u<i>????</i></th>
+                            <th>\<i>?</i></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>BEL</td>
+                            <td>BS</td>
+                            <td>ESC</td>
+                            <td>FF</td>
+                            <td>LF</td>
+                            <td>CRLF</td>
+                            <td>CR</td>
+                            <td>SP</td>
+                            <td>TAB</td>
+                            <td>Ctrl-<i>?</i></td>
+                            <td>Meta-<i>?</i></td>
+                            <td>Meta-Ctrl-<i>?</i></td>
+                            <td>chr 0<i>???</i></td>
+                            <td colspan="2">chr 0x<i>????</i></td>
+                            <td><i>?</i></td>
+                        </tr>
+                        <tr style="font-size: 0.75em">
+                            <td colspan="9"></td>
+                            <td colspan="3">?:任意の文字</td>
+                            <td>0-7</td>
+                            <td colspan="2">0-9a-fA-F</td>
+                            <td>左記以外</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+<code class="block"><span class="string">"hello"</span>
+<span class="string">"Pyon<i>\t</i>Pyon<i>\n</i>"</span>
+<span class="string">"<i>\"</i><i>\'</i><i>\\</i><i>\0</i><i>\012</i><i>\x12</i><i>\u1234</i>"
+<span class="string">"ab c	de
+fg"</span> <span class="comment"># any char other than " or \ can be put without escaping</span></code>
+
+                <p>シングルクォートシンボルは、シングルクォート(<code>'</code>)で始まり英数字もしくはエスケープシーケンスが1個以上並んだ形式です。</p>
+
+<code class="block"><span class="string">'world<i>\n</i></span></span>
+<span class="string">'with<i>\s</i>space</span>
+<span class="string">'Pyon</span><span class="binop">-</span>Pyon <span class="comment"># wrong</span>
+<span class="string">'Pyon</span>_Pyon <span class="comment"># wrong</span></code>
 
             </section>
         </section>
